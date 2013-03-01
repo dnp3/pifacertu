@@ -20,35 +20,35 @@ using namespace opendnp3;
 class PifaceCommandHandler : public ICommandHandler {
 private:
 
-	void Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+	void DoOperate(const ControlRelayOutputBlock& arCommand, char index)
 	{
 		char value = 0;
 		if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
-		pfio_digital_write(0, value);
+		pfio_digital_write(index, value);
 	}
 
 public:
-		
+
 
 	CommandStatus Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 	{
-		if(aIndex < 4) return CS_SUCCESS;
+		if(aIndex < 8) return CS_SUCCESS;
 		else return CS_NOT_SUPPORTED;
 	}
-	
+
 	CommandStatus Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 	{
-		if(aIndex < 4) {
-			Operate(arCommand, aIndex);
+		if(aIndex < 8) {
+			DoOperate(arCommand, static_cast<char>(aIndex + 1));
 			return CS_SUCCESS;
 		}
 		else return CS_NOT_SUPPORTED;
 	}
-	
+
 	CommandStatus DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 	{
 		if(aIndex < 4) {
-			
+			DoOperate(arCommand, aIndex);
 			return CS_SUCCESS;
 		}
 		else return CS_NOT_SUPPORTED;
@@ -77,6 +77,10 @@ int main(int argc, char* argv[])
 		exit(-1);
 	}
 
+	uint32_t  input0Count = 0;
+
+	bool input1State = false;
+
 	const FilterLevel LOG_LEVEL = LEV_EVENT;
 	PifaceCommandHandler cmdHandler;
 	DNP3Manager mgr(1);
@@ -85,11 +89,13 @@ int main(int argc, char* argv[])
 	SlaveStackConfig stackConfig;
 	DeviceTemplate device(4, 0, 0, 0, 0);
 	stackConfig.device = device;
-	
+
 	auto pOutstation = pServer->AddOutstation("outstation", LOG_LEVEL, &cmdHandler, stackConfig);
 	auto pDataObserver = pOutstation->GetDataObserver();
 
 	do {
+		char input = pfio_read_input();
+
 		this_thread::sleep_for( chrono::milliseconds(100) );
 	}
 	while(true);
