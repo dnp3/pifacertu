@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
 
 	// Add a TCPServer to the manager with the name "tcpserver".
 	// The server will wait 3000 ms in between failed bind calls.
-	auto pServer = mgr.AddTCPServer("tcpserver", LOG_LEVEL, 5000, "127.0.0.1", 20000);
-	
+	auto pServer = mgr.AddTCPServer("tcpserver", LOG_LEVEL, 5000, "0.0.0.0", 20000);
+
 	// The master config object for a slave. The default are
 	// useable, but understanding the options are important.
 	SlaveStackConfig stackConfig;
