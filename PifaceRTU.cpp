@@ -18,8 +18,54 @@ using namespace std;
 using namespace opendnp3;
 
 class PifaceCommandHandler : public ICommandHandler {
+private:
+
+	void Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+	{
+		char value = 0;
+		if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
+		pfio_digital_write(0, value);
+	}
+
 public:
+		
+
+	CommandStatus Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+	{
+		if(aIndex < 4) return CS_SUCCESS;
+		else return CS_NOT_SUPPORTED;
+	}
 	
+	CommandStatus Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+	{
+		if(aIndex < 4) {
+			Operate(arCommand, aIndex);
+			return CS_SUCCESS;
+		}
+		else return CS_NOT_SUPPORTED;
+	}
+	
+	CommandStatus DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+	{
+		if(aIndex < 4) {
+			
+			return CS_SUCCESS;
+		}
+		else return CS_NOT_SUPPORTED;
+	}
+
+	CommandStatus Select(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus Operate(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus DirectOperate(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus Select(const AnalogOutputInt32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus Operate(const AnalogOutputInt32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
+	CommandStatus DirectOperate(const AnalogOutputInt32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
+	CommandStatus Select(const AnalogOutputFloat32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus Operate(const AnalogOutputFloat32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus DirectOperate(const AnalogOutputFloat32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
+	CommandStatus Select(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus Operate(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	CommandStatus DirectOperate(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
 
 };
 
@@ -32,14 +78,15 @@ int main(int argc, char* argv[])
 	}
 
 	const FilterLevel LOG_LEVEL = LEV_EVENT;
+	PifaceCommandHandler cmdHandler;
 	DNP3Manager mgr(1);
 	auto pServer = mgr.AddTCPServer("tcpserver", LOG_LEVEL, 5000, "0.0.0.0", 20000);
 
 	SlaveStackConfig stackConfig;
 	DeviceTemplate device(4, 0, 0, 0, 0);
 	stackConfig.device = device;
-
-	auto pOutstation = pServer->AddOutstation("outstation", LOG_LEVEL, SuccessCommandHandler::Inst(), stackConfig);
+	
+	auto pOutstation = pServer->AddOutstation("outstation", LOG_LEVEL, &cmdHandler, stackConfig);
 	auto pDataObserver = pOutstation->GetDataObserver();
 
 	do {
