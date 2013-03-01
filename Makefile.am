@@ -4,7 +4,7 @@ ACLOCAL_AMFLAGS = -I ./m4
 
 CORE_BOOST_LIBS = $(BOOST_SYSTEM_LIB)
 
-AM_CXXFLAGS = -lopendnp3
+AM_CXXFLAGS = -lopendnp3 -lpiface-1.0
 AM_LDFLAGS  = $(BOOST_LDFLAGS)
 
 bin_PROGRAMS = pifacertu
