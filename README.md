@@ -1,6 +1,6 @@
 DNP3 Remote Terminal Unit (RTU) based on opendnp3 (dnp3.github.com) and the raspberry Pi + Piface.
 
-1. Build and install opendnp3 on the Pi or via cross compiler (dnp3.github.com)
+1. Build and install opendnp3 on the Pi or via cross compiler (http://dnp3.github.com)
 2. Build and install libpiface-1.0 (https://github.com/thomasmacpherson/piface)
 3. Build piface rtu:
 
