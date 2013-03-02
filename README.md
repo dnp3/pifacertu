@@ -13,4 +13,15 @@ $ ./pifacertu
 
 By default, the RTU listens on port 20000. Master address is 1, outstation address is 1024.
 
-ControlRelayOutputBlock requests can be sent to indices 0 to 7 with LATCH_ON or LATCH_OFF. Indices 0 an 1 control the relays.
+ControlRelayOutputBlock requests can be sent to indices 0 to 7 with LATCH_ON or LATCH_OFF.
+
+| Index         | Function        |
+| ------------- |:---------------:|
+| 0             | Relay 1 + LED1  |
+| 1             | Relay 2 + LED2  |
+| 2             | LED3            |
+| 3             | LED4            |
+| 4             | LED5            |
+| 5             | LED6            |
+| 6             | LED7            |
+| 7             | LED8            |
