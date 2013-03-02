@@ -18,6 +18,8 @@ public:
 	PifaceIOHandler();
 	~PifaceIOHandler();
 
+	void ReadMeasurements(opendnp3::IDataObserver* apObserver);
+
 	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);		
 	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 	opendnp3::CommandStatus DirectOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);

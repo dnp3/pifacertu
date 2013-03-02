@@ -32,6 +32,12 @@ PifaceIOHandler::~PifaceIOHandler()
 	pfio_deinit();
 }
 
+void PifaceIOHandler::ReadMeasurements(opendnp3::IDataObserver* apObserver)
+{
+	char data = pfio_read_input();
+	std::cout << static_cast<int>(data) << std::endl;
+}
+
 CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	if(aIndex < 4) return CS_SUCCESS;
