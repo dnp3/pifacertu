@@ -2,7 +2,7 @@
 #ifndef __PIFACE_IO_HANDLER_H_
 #define __PIFACE_IO_HANDLER_H_
 
-#include <opendnp3/ICommandHandler>
+#include <opendnp3/ICommandHandler.h>
 
 using namespace opendnp3;
 
@@ -11,13 +11,13 @@ class PifaceIOHandler : public opendnp3::ICommandHandler
 
 private:
 
-	void DoOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);	
+	void DoOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 
 public:
 
 	PifaceIOHandler();
 	~PifaceIOHandler();
-	
+
 	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);		
 	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 	opendnp3::CommandStatus DirectOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);

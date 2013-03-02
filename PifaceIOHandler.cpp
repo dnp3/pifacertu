@@ -9,7 +9,7 @@ extern "C" {
 
 using namespace opendnp3;
 
-void PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	char value = 0;
 	if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
@@ -19,19 +19,19 @@ void PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t a
 
 PifaceIOHandler::PifaceIOHandler()
 {
-	int result = pfio_init(); 
+	int result = pfio_init();
 	if(result < 0)
 	{
 		std::cerr << "Unable to initialize piface" << std::endl;
 		exit(result);
 	}
-}		
+}
 
 PifaceIOHandler::~PifaceIOHandler()
 {
 	pfio_deinit();
 }
-	
+
 CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	if(aIndex < 4) return CS_SUCCESS;
@@ -50,10 +50,7 @@ CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand,
 CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	if(aIndex < 4) {
-		
 		return CS_SUCCESS;
 	}
 	else return CS_NOT_SUPPORTED;
 }
-
-
