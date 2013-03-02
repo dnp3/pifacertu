@@ -18,7 +18,7 @@ void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, char a
 
 CommandStatus PifaceIOHandler::ValidateCROB(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
-	if(aIndex < 4) {
+	if(aIndex < 8) {
 		if(arCommand.GetCode() == CC_LATCH_ON || arCommand.GetCode() == CC_LATCH_OFF) return CS_SUCCESS;
 		else return CS_NOT_SUPPORTED;
 	}
