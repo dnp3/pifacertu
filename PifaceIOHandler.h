@@ -12,7 +12,8 @@ class PifaceIOHandler : public opendnp3::ICommandHandler
 
 private:
 
-	void DoOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
+	void DoOperate(const opendnp3::ControlRelayOutputBlock& arCommand, char aIndex);
+	opendnp3::CommandStatus ValidateCROB(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 
 	int lastData;
 
@@ -25,7 +26,7 @@ public:
 
 	void ReadMeasurements(opendnp3::IDataObserver* apObserver);
 
-	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);		
+	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 	opendnp3::CommandStatus DirectOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 

@@ -9,11 +9,20 @@ extern "C" {
 
 using namespace opendnp3;
 
-void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, char aIndex)
 {
 	char value = 0;
 	if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
-	pfio_digital_write(0, value);
+	pfio_digital_write(aIndex, value);
+}
+
+CommandStatus PifaceIOHandler::ValidateCROB(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex)
+{
+	if(aIndex < 4) {
+		if(arCommand.GetCode() == CC_LATCH_ON || arCommand.GetCode() == CC_LATCH_OFF) return CS_SUCCESS;
+		else return CS_NOT_SUPPORTED;
+	}
+	else return CS_NOT_SUPPORTED;
 }
 
 bool PifaceIOHandler::isSwitchOn(int data, int num)
@@ -55,23 +64,19 @@ void PifaceIOHandler::ReadMeasurements(IDataObserver* apObserver)
 
 CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
-	if(aIndex < 4) return CS_SUCCESS;
-	else return CS_NOT_SUPPORTED;
+	return ValidateCROB(arCommand, aIndex);
 }
 
 CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
-	if(aIndex < 4) {
-		Operate(arCommand, aIndex);
-		return CS_SUCCESS;
-	}
-	else return CS_NOT_SUPPORTED;
+	CommandStatus validation = ValidateCROB(arCommand, aIndex);
+	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex+1));
+	return validation;
 }
 
 CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
-	if(aIndex < 4) {
-		return CS_SUCCESS;
-	}
-	else return CS_NOT_SUPPORTED;
+	CommandStatus validation = ValidateCROB(arCommand, aIndex);
+	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex+1));
+	return validation;
 }
