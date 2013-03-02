@@ -1,16 +1,13 @@
 
-#include <opendnp3/LogToStdio.h>
 #include <opendnp3/DNP3Manager.h>
 #include <opendnp3/SlaveStackConfig.h>
 #include <opendnp3/IChannel.h>
 #include <opendnp3/IOutstation.h>
-#include <opendnp3/ICommandHandler.h>
 
 #include "PifaceIOHandler.h"
 
 #include <thread>
 #include <chrono>
-#include <iostream>
 
 using namespace std;
 using namespace opendnp3;

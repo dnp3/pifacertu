@@ -2,36 +2,38 @@
 #ifndef __PIFACE_IO_HANDLER_H_
 #define __PIFACE_IO_HANDLER_H_
 
+#include <opendnp3/ICommandHandler>
+
 using namespace opendnp3;
 
-class PifaceIOHandler : public ICommandHandler
+class PifaceIOHandler : public opendnp3::ICommandHandler
 {
 
 private:
 
-	void DoOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex);	
+	void DoOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);	
 
 public:
 
 	PifaceIOHandler();
 	~PifaceIOHandler();
 	
-	CommandStatus Select(const ControlRelayOutputBlock& arCommand, size_t aIndex);		
-	CommandStatus Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex);
-	CommandStatus DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex);
+	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);		
+	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
+	opendnp3::CommandStatus DirectOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
 
-	CommandStatus Select(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Select(const AnalogOutputInt32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputInt32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputInt32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
-	CommandStatus Select(const AnalogOutputFloat32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputFloat32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputFloat32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
-	CommandStatus Select(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputInt16& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputInt16& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputInt16& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputInt32& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputInt32& arCommand, size_t aIndex)  { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputInt32& arCommand, size_t aIndex)  { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputFloat32& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputFloat32& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputFloat32& arCommand, size_t aIndex)  { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputDouble64& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputDouble64& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
+	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputDouble64& arCommand, size_t aIndex) { return opendnp3::CS_NOT_SUPPORTED; }
 
 };
 

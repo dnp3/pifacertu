@@ -7,6 +7,8 @@ extern "C" {
 
 #include <iostream>
 
+using namespace opendnp3;
+
 void PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	char value = 0;
