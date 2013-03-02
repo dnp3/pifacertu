@@ -16,8 +16,15 @@ void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, size_t
 	pfio_digital_write(0, value);
 }
 
+bool PifaceIOHandler::isSwitchOn(int data, int num)
+{
+	int mask = 1 << num; // 255 is all off, switch 0 is lowest bit
+	bool ret = ((data & mask) == 0);
+	return ret;
+}
 
-PifaceIOHandler::PifaceIOHandler()
+
+PifaceIOHandler::PifaceIOHandler() : lastData(0)
 {
 	int result = pfio_init();
 	if(result < 0)
@@ -32,10 +39,18 @@ PifaceIOHandler::~PifaceIOHandler()
 	pfio_deinit();
 }
 
-void PifaceIOHandler::ReadMeasurements(opendnp3::IDataObserver* apObserver)
+void PifaceIOHandler::ReadMeasurements(IDataObserver* apObserver)
 {
-	char data = pfio_read_input();
-	std::cout << static_cast<int>(data) << std::endl;
+	int data = pfio_read_input();
+	if(lastData != data)
+	{
+		lastData = data;
+		Transaction t(apObserver);
+		apObserver->Update(Binary(isSwitchOn(data, 0)), 0);
+		apObserver->Update(Binary(isSwitchOn(data, 1)), 1);
+		apObserver->Update(Binary(isSwitchOn(data, 2)), 2);
+		apObserver->Update(Binary(isSwitchOn(data, 3)), 3);
+	}
 }
 
 CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)

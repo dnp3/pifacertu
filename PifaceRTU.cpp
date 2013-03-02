@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 	auto pDataObserver = pOutstation->GetDataObserver();
 
 	do {
+		ioHandler.ReadMeasurements(pDataObserver);
 		this_thread::sleep_for( chrono::milliseconds(100) );
 	}
 	while(true);

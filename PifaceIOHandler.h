@@ -3,6 +3,7 @@
 #define __PIFACE_IO_HANDLER_H_
 
 #include <opendnp3/ICommandHandler.h>
+#include <opendnp3/IDataObserver.h>
 
 using namespace opendnp3;
 
@@ -12,6 +13,10 @@ class PifaceIOHandler : public opendnp3::ICommandHandler
 private:
 
 	void DoOperate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
+
+	int lastData;
+
+	bool isSwitchOn(int data, int num);
 
 public:
 
