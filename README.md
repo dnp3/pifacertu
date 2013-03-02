@@ -25,3 +25,16 @@ ControlRelayOutputBlock requests can be sent to indices 0 to 7 with LATCH_ON or 
 | 5             | LED6            |
 | 6             | LED7            |
 | 7             | LED8            |
+
+
+Switches 1-4 are mapped to BinaryInput indices 0-3
+
+| Index         | Function        |
+| ------------- |:---------------:|
+| 0             | Switch1         |
+| 1             | Switch2         |
+| 2             | Switch3         |
+| 3             | Switch4         |
+
+
+Enjoy!
