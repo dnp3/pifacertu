@@ -11,4 +11,4 @@ bin_PROGRAMS = pifacertu
 
 pifacertu_LDFLAGS = $(BOOST_LDFLAGS)
 pifacertu_LDADD = $(CORE_BOOST_LIBS)
-pifacertu_SOURCES = PifaceRTU.cpp
+pifacertu_SOURCES = PifaceRTU.cpp PifaceIOHandler.cpp

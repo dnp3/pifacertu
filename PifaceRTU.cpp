@@ -6,9 +6,7 @@
 #include <opendnp3/IOutstation.h>
 #include <opendnp3/ICommandHandler.h>
 
-extern "C" {
-#include <libpiface-1.0/pfio.h>
-}
+#include "PifaceIOHandler.h"
 
 #include <thread>
 #include <chrono>
@@ -17,72 +15,11 @@ extern "C" {
 using namespace std;
 using namespace opendnp3;
 
-class PifaceCommandHandler : public ICommandHandler {
-private:
-
-	void DoOperate(const ControlRelayOutputBlock& arCommand, char index)
-	{
-		char value = 0;
-		if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
-		pfio_digital_write(index, value);
-	}
-
-public:
-
-
-	CommandStatus Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
-	{
-		if(aIndex < 8) return CS_SUCCESS;
-		else return CS_NOT_SUPPORTED;
-	}
-
-	CommandStatus Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
-	{
-		if(aIndex < 8) {
-			DoOperate(arCommand, static_cast<char>(aIndex + 1));
-			return CS_SUCCESS;
-		}
-		else return CS_NOT_SUPPORTED;
-	}
-
-	CommandStatus DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
-	{
-		if(aIndex < 4) {
-			DoOperate(arCommand, aIndex);
-			return CS_SUCCESS;
-		}
-		else return CS_NOT_SUPPORTED;
-	}
-
-	CommandStatus Select(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputInt16& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Select(const AnalogOutputInt32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputInt32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputInt32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
-	CommandStatus Select(const AnalogOutputFloat32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputFloat32& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputFloat32& arCommand, size_t aIndex)  { return CS_NOT_SUPPORTED; }
-	CommandStatus Select(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus Operate(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-	CommandStatus DirectOperate(const AnalogOutputDouble64& arCommand, size_t aIndex) { return CS_NOT_SUPPORTED; }
-
-};
-
-
 int main(int argc, char* argv[])
 {
-	if(pfio_init() < 0) {
-		std::cerr << "Could not initialize piface" << std::endl;
-		exit(-1);
-	}
-
-	uint32_t  input0Count = 0;
-
-	bool input1State = false;
+	PifaceIOHandler ioHandler; // handles control request, input polling, and measurement tracking/updates
 
 	const FilterLevel LOG_LEVEL = LEV_EVENT;
-	PifaceCommandHandler cmdHandler;
 	DNP3Manager mgr(1);
 	auto pServer = mgr.AddTCPServer("tcpserver", LOG_LEVEL, 5000, "0.0.0.0", 20000);
 
@@ -90,17 +27,13 @@ int main(int argc, char* argv[])
 	DeviceTemplate device(4, 0, 0, 0, 0);
 	stackConfig.device = device;
 
-	auto pOutstation = pServer->AddOutstation("outstation", LOG_LEVEL, &cmdHandler, stackConfig);
+	auto pOutstation = pServer->AddOutstation("outstation", LOG_LEVEL, &ioHandler, stackConfig);
 	auto pDataObserver = pOutstation->GetDataObserver();
 
 	do {
-		char input = pfio_read_input();
-
 		this_thread::sleep_for( chrono::milliseconds(100) );
 	}
 	while(true);
-
-	pfio_deinit();
 
 	return 0;
 }

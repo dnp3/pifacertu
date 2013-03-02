@@ -10,3 +10,4 @@ configure
 Makefile
 Makefile.in
 pifacertu
+libtool
