@@ -9,7 +9,7 @@ extern "C" {
 
 using namespace opendnp3;
 
-void PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	char value = 0;
 	if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
@@ -30,6 +30,12 @@ PifaceIOHandler::PifaceIOHandler()
 PifaceIOHandler::~PifaceIOHandler()
 {
 	pfio_deinit();
+}
+
+void PifaceIOHandler::ReadMeasurements(opendnp3::IDataObserver* apObserver)
+{
+	char data = pfio_read_input();
+	std::cout << static_cast<int>(data) << std::endl;
 }
 	
 CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)

@@ -2,7 +2,7 @@
 #ifndef __PIFACE_IO_HANDLER_H_
 #define __PIFACE_IO_HANDLER_H_
 
-#include <opendnp3/ICommandHandler>
+#include <opendnp3/ICommandHandler.h>
 
 using namespace opendnp3;
 
@@ -17,6 +17,8 @@ public:
 
 	PifaceIOHandler();
 	~PifaceIOHandler();
+
+	void ReadMeasurements(opendnp3::IDataObserver* apObserver);
 	
 	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);		
 	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex);
