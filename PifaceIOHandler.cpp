@@ -5,7 +5,10 @@ extern "C" {
 #include <libpiface-1.0/pfio.h>
 }
 
+#include <opendnp3/TimeTransaction.h>
+
 #include <iostream>
+#include <chrono>
 
 using namespace opendnp3;
 
@@ -54,11 +57,11 @@ void PifaceIOHandler::ReadMeasurements(IDataObserver* apObserver)
 	if(lastData != data)
 	{
 		lastData = data;
-		Transaction t(apObserver);
-		apObserver->Update(Binary(isSwitchOn(data, 0)), 0);
-		apObserver->Update(Binary(isSwitchOn(data, 1)), 1);
-		apObserver->Update(Binary(isSwitchOn(data, 2)), 2);
-		apObserver->Update(Binary(isSwitchOn(data, 3)), 3);
+		TimeTransaction tx(apObserver);
+		tx.Update(Binary(isSwitchOn(data, 0), BQ_ONLINE), 0);
+		tx.Update(Binary(isSwitchOn(data, 1), BQ_ONLINE), 1);
+		tx.Update(Binary(isSwitchOn(data, 2), BQ_ONLINE), 2);
+		tx.Update(Binary(isSwitchOn(data, 3), BQ_ONLINE), 3);
 	}
 }
 
