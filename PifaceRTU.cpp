@@ -25,8 +25,7 @@ int main(int argc, char* argv[])
 	stackConfig.device = device;
 
 	// just to be interesting, send timestamped binary events by default
-	stackConfig.slave.mEventBinary.Grp = 2;
-	stackConfig.slave.mEventBinary.Var = 2;
+	stackConfig.slave.mEventBinary = EBR_GROUP2_VAR2;
 
 	auto pOutstation = pServer->AddOutstation("outstation", LOG_LEVEL, &ioHandler, stackConfig);
 	auto pDataObserver = pOutstation->GetDataObserver();
