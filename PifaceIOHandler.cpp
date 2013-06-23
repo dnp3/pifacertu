@@ -1,4 +1,3 @@
-
 #include "PifaceIOHandler.h"
 
 extern "C" {
@@ -73,13 +72,13 @@ CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, 
 CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	CommandStatus validation = ValidateCROB(arCommand, aIndex);
-	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex+1));
+	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex));
 	return validation;
 }
 
 CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
 {
 	CommandStatus validation = ValidateCROB(arCommand, aIndex);
-	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex+1));
+	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex));
 	return validation;
 }
