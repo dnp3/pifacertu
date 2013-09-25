@@ -1,4 +1,4 @@
-Demonstration project of a VERY simple DNP3 Remote Terminal Unit (RTU) based on [opendnp3](dnp3.github.io) and the raspberry Pi + Piface.
+Demonstration project of a VERY simple DNP3 Remote Terminal Unit (RTU) based on [opendnp3](http://dnp3.github.io) and the raspberry Pi + Piface.
 
 Why put dnp3 on the RPi? Because it's fun and a cheap demo of it running on a non-x86 architecture.
 
