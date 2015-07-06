@@ -2,13 +2,15 @@ Demonstration project of a simple DNP3 device based on [opendnp3](https://www.au
 
 Why put dnp3 on the RPi? Because it's fun and a cheap demo of it running on a non-x86 architecture.
 
-1. Build and install opendnp3 2.0.1 on the RPi or via cross compiler *using the cmake build system*
+Build and install opendnp3 2.0.1 on the RPi or via cross compiler *using the cmake build system*
+
 ```
    * cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr
    * make
    * sudo make install
 ```
-2. Build and install libpiface-1.0 (https://github.com/thomasmacpherson/piface)
+
+Build and install libpiface-1.0 (https://github.com/thomasmacpherson/piface)
 ```
    * cd c
    * ./autogen.sh
@@ -16,7 +18,8 @@ Why put dnp3 on the RPi? Because it's fun and a cheap demo of it running on a no
    * make
    * make install
 ```
-3. Build piface rtu:
+
+Build piface rtu:
 ```
    * cmake .
    * make
