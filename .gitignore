@@ -11,3 +11,9 @@ Makefile
 Makefile.in
 pifacertu
 libtool
+
+#cmake stuff
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
