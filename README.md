@@ -1,29 +1,6 @@
 Demonstration project of a simple DNP3 device based on [opendnp3](https://www.automatak.com/opendnp3) and the raspberry Pi + Piface.
 
-Why put dnp3 on the RPi? Because it's fun and a cheap demo of it running on a non-x86 architecture.
-
-Build and install opendnp3 2.0.1 on the RPi or via cross compiler *using the cmake build system*
-
-```
-   * cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr
-   * make
-   * sudo make install
-```
-
-Build and install libpiface-1.0 (https://github.com/thomasmacpherson/piface)
-```
-   * cd c
-   * ./autogen.sh
-   * ./configure --prefix=/usr
-   * make
-   * make install
-```
-
-Build piface rtu:
-```
-   * cmake .
-   * make
-```
+Why put dnp3 on the RPi? Because it's fun and a cheap demo of it running on a non-x86 architecture with real I/O.
 
 By default, the RTU listens on port 20000. Master address is 1, outstation address is 1024. You can change these in the source
 or setup some command line arguments. Pull requests happily accepted =).
@@ -53,3 +30,34 @@ Switches 1-4 are mapped to BinaryInput indices 0-3
 
 
 Enjoy!
+
+Building
+==========================
+
+Piface RTU expects the various opendnp3 libraries to be installed.
+
+Use opendnp3 2.0.x on the RPi or via cross compiler *using the cmake build system*. Make sure that you've defined ASIO_HOME environment variable.
+
+```
+   * cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr
+   * make
+   * sudo make install
+```
+
+Piface RTU expects [libpiface-1.0](https://github.com/thomasmacpherson/piface) to be installed.
+
+```
+   * cd c
+   * ./autogen.sh
+   * ./configure --prefix=/usr
+   * make
+   * make install
+```
+
+With both depenencies installed 
+
+Build piface rtu:
+```
+   * cmake .
+   * make
+```
