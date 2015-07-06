@@ -4,27 +4,35 @@ extern "C" {
 #include <libpiface-1.0/pfio.h>
 }
 
-#include <opendnp3/TimeTransaction.h>
+#include <asiodnp3/MeasUpdate.h>
 
 #include <iostream>
 #include <chrono>
 
 using namespace opendnp3;
+using namespace asiodnp3;
 
-void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& arCommand, char aIndex)
+void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& command, uint8_t index)
 {
-	char value = 0;
-	if(arCommand.GetCode() == CC_LATCH_ON) value = 1;
-	pfio_digital_write(aIndex, value);
+	uint8_t value = (command.functionCode == ControlCode::LATCH_ON) ? 1 : 0;	
+	pfio_digital_write(index, value);
 }
 
-CommandStatus PifaceIOHandler::ValidateCROB(const opendnp3::ControlRelayOutputBlock& arCommand, size_t aIndex)
+CommandStatus PifaceIOHandler::ValidateCROB(const ControlRelayOutputBlock& command, uint16_t index)
 {
-	if(aIndex < 8) {
-		if(arCommand.GetCode() == CC_LATCH_ON || arCommand.GetCode() == CC_LATCH_OFF) return CS_SUCCESS;
-		else return CS_NOT_SUPPORTED;
+	if(index >= 8) 
+	{
+	  return CommandStatus::NOT_SUPPORTED;
 	}
-	else return CS_NOT_SUPPORTED;
+	
+	switch(command.functionCode)
+	{		  
+	    case(ControlCode::LATCH_ON):
+	    case(ControlCode::LATCH_OFF):
+	      return CommandStatus::SUCCESS;
+	    default:
+	      return CommandStatus::NOT_SUPPORTED;
+	}			
 }
 
 bool PifaceIOHandler::isSwitchOn(int data, int num)
@@ -50,35 +58,36 @@ PifaceIOHandler::~PifaceIOHandler()
 	pfio_deinit();
 }
 
-void PifaceIOHandler::ReadMeasurements(IDataObserver* apObserver)
+void PifaceIOHandler::ReadMeasurements(asiodnp3::IOutstation* pOutstation)
 {
+	const uint8_t ONLINE = 0x01;
 	int data = pfio_read_input();
 	if(lastData != data)
 	{
 		lastData = data;
-		TimeTransaction tx(apObserver);
-		tx.Update(Binary(isSwitchOn(data, 0), BQ_ONLINE), 0);
-		tx.Update(Binary(isSwitchOn(data, 1), BQ_ONLINE), 1);
-		tx.Update(Binary(isSwitchOn(data, 2), BQ_ONLINE), 2);
-		tx.Update(Binary(isSwitchOn(data, 3), BQ_ONLINE), 3);
+		MeasUpdate tx(pOutstation);
+		tx.Update(Binary(isSwitchOn(data, 0), ONLINE), 0);
+		tx.Update(Binary(isSwitchOn(data, 1), ONLINE), 1);
+		tx.Update(Binary(isSwitchOn(data, 2), ONLINE), 2);
+		tx.Update(Binary(isSwitchOn(data, 3), ONLINE), 3);
 	}
 }
 
-CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& command, uint16_t index)
 {
-	return ValidateCROB(arCommand, aIndex);
+	return ValidateCROB(command, index);
 }
 
-CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& command, uint16_t index)
 {
-	CommandStatus validation = ValidateCROB(arCommand, aIndex);
-	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex));
+	CommandStatus validation = ValidateCROB(command, index);
+	if(validation == CommandStatus::SUCCESS) DoOperate(command, static_cast<char>(index));
 	return validation;
 }
 
-CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& arCommand, size_t aIndex)
+CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& command, uint16_t index)
 {
-	CommandStatus validation = ValidateCROB(arCommand, aIndex);
-	if(validation == CS_SUCCESS) DoOperate(arCommand, static_cast<char>(aIndex));
+	CommandStatus validation = ValidateCROB(command, index);
+	if(validation == CommandStatus::SUCCESS) DoOperate(command, static_cast<uint8_t>(index));
 	return validation;
 }

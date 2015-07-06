@@ -13,6 +13,5 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 
 # ----- pifacertu executable -----
-file(GLOB_RECURSE cppfiles ./*.cpp)
-add_executable (pifacertu ${cppfiles})
-target_link_libraries (pifacertu LINK_PUBLIC asiodnp3)
+add_executable (pifacertu PifaceIOHandler.cpp PifaceRTU.cpp)
+target_link_libraries (pifacertu LINK_PUBLIC asiodnp3 opendnp3 asiopal openpal piface-1.0 pthread)
