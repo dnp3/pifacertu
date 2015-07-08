@@ -14,25 +14,25 @@ using namespace asiodnp3;
 
 void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& command, uint8_t index)
 {
-	uint8_t value = (command.functionCode == ControlCode::LATCH_ON) ? 1 : 0;	
+	uint8_t value = (command.functionCode == ControlCode::LATCH_ON) ? 1 : 0;
 	pfio_digital_write(index, value);
 }
 
 CommandStatus PifaceIOHandler::ValidateCROB(const ControlRelayOutputBlock& command, uint16_t index)
 {
-	if(index >= 8) 
+	if(index >= 8)
 	{
 	  return CommandStatus::NOT_SUPPORTED;
 	}
-	
+
 	switch(command.functionCode)
-	{		  
+	{
 	    case(ControlCode::LATCH_ON):
 	    case(ControlCode::LATCH_OFF):
 	      return CommandStatus::SUCCESS;
 	    default:
 	      return CommandStatus::NOT_SUPPORTED;
-	}			
+	}
 }
 
 bool PifaceIOHandler::isSwitchOn(int data, int num)
@@ -43,7 +43,7 @@ bool PifaceIOHandler::isSwitchOn(int data, int num)
 }
 
 
-PifaceIOHandler::PifaceIOHandler() : lastData(0)
+PifaceIOHandler::PifaceIOHandler()
 {
 	int result = pfio_init();
 	if(result < 0)
@@ -62,15 +62,12 @@ void PifaceIOHandler::ReadMeasurements(asiodnp3::IOutstation* pOutstation)
 {
 	const uint8_t ONLINE = 0x01;
 	int data = pfio_read_input();
-	if(lastData != data)
-	{
-		lastData = data;
-		MeasUpdate tx(pOutstation);
-		tx.Update(Binary(isSwitchOn(data, 0), ONLINE), 0);
-		tx.Update(Binary(isSwitchOn(data, 1), ONLINE), 1);
-		tx.Update(Binary(isSwitchOn(data, 2), ONLINE), 2);
-		tx.Update(Binary(isSwitchOn(data, 3), ONLINE), 3);
-	}
+
+	MeasUpdate tx(pOutstation);
+	tx.Update(Binary(isSwitchOn(data, 0), ONLINE), 0);
+	tx.Update(Binary(isSwitchOn(data, 1), ONLINE), 1);
+	tx.Update(Binary(isSwitchOn(data, 2), ONLINE), 2);
+	tx.Update(Binary(isSwitchOn(data, 3), ONLINE), 3);
 }
 
 CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& command, uint16_t index)

@@ -13,9 +13,7 @@ private:
 	void DoOperate(const opendnp3::ControlRelayOutputBlock& command, uint8_t index);
 	opendnp3::CommandStatus ValidateCROB(const opendnp3::ControlRelayOutputBlock& command, uint16_t index);
 
-	int lastData;
-
-	bool isSwitchOn(int data, int num);
+	static bool isSwitchOn(int data, int num);
 
 public:
 

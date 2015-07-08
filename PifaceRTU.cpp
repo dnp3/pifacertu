@@ -1,5 +1,6 @@
 
 #include <asiodnp3/DNP3Manager.h>
+#include <asiodnp3/ConsoleLogger.h>
 #include <opendnp3/outstation/OutstationStackConfig.h>
 #include <opendnp3/LogLevels.h>
 
@@ -19,14 +20,18 @@ int main(int argc, char* argv[])
 
 	const uint32_t FILTERS = levels::NORMAL;
 	DNP3Manager dnp3(1);
+	dnp3.AddLogSubscriber(&ConsoleLogger::Instance());
+
 	auto channel =  dnp3.AddTCPServer("server", FILTERS, TimeDuration::Seconds(1), TimeDuration::Seconds(1), "0.0.0.0", 20000);
 
-	OutstationStackConfig stackConfig;	
+	OutstationStackConfig stackConfig;
 	stackConfig.dbTemplate = DatabaseTemplate::BinaryOnly(4);
 	stackConfig.outstation.eventBufferConfig = EventBufferConfig::AllTypes(10);
-	
+	stackConfig.outstation.params.allowUnsolicited = true;
+
 	auto outstation = channel->AddOutstation("outstation", ioHandler, DefaultOutstationApplication::Instance(), stackConfig);
-	
+
+	outstation->Enable();
 
 	do {
 		ioHandler.ReadMeasurements(outstation);
