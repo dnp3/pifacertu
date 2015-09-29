@@ -2,6 +2,7 @@
 #include <asiodnp3/DNP3Manager.h>
 #include <asiodnp3/ConsoleLogger.h>
 #include <opendnp3/outstation/OutstationStackConfig.h>
+#include <opendnp3/link/ChannelRetry.h>
 #include <opendnp3/LogLevels.h>
 
 #include "PifaceIOHandler.h"
@@ -22,7 +23,7 @@ int main(int argc, char* argv[])
 	DNP3Manager dnp3(1);
 	dnp3.AddLogSubscriber(&ConsoleLogger::Instance());
 
-	auto channel =  dnp3.AddTCPServer("server", FILTERS, TimeDuration::Seconds(1), TimeDuration::Seconds(1), "0.0.0.0", 20000);
+	auto channel =  dnp3.AddTCPServer("server", FILTERS, opendnp3::ChannelRetry::Default(), "0.0.0.0", 20000);
 
 	OutstationStackConfig stackConfig;
 	stackConfig.dbTemplate = DatabaseTemplate::BinaryOnly(4);

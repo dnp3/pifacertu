@@ -82,9 +82,3 @@ CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& command, u
 	return validation;
 }
 
-CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& command, uint16_t index)
-{
-	CommandStatus validation = ValidateCROB(command, index);
-	if(validation == CommandStatus::SUCCESS) DoOperate(command, static_cast<uint8_t>(index));
-	return validation;
-}
