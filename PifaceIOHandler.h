@@ -20,24 +20,25 @@ public:
 	PifaceIOHandler();
 	~PifaceIOHandler();
 
+	virtual void Start() override {}
+	virtual void End() override {}
+
 	void ReadMeasurements(asiodnp3::IOutstation* pOutstation);
 
 	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& command, uint16_t index);
-	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& command, uint16_t index);
-	opendnp3::CommandStatus DirectOperate(const opendnp3::ControlRelayOutputBlock& command, uint16_t index);
+	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& command, uint16_t index, opendnp3::OperateType opType);
 
 	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputInt16& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputInt16& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputInt16& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputInt16& command, uint16_t index, opendnp3::OperateType opType) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+
 	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputInt32& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputInt32& command, uint16_t index)  { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputInt32& command, uint16_t index)  { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputInt32& command, uint16_t index, opendnp3::OperateType opType)  { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+
 	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputFloat32& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputFloat32& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputFloat32& command, uint16_t index)  { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputFloat32& command, uint16_t index, opendnp3::OperateType opType) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+
 	opendnp3::CommandStatus Select(const opendnp3::AnalogOutputDouble64& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputDouble64& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
-	opendnp3::CommandStatus DirectOperate(const opendnp3::AnalogOutputDouble64& command, uint16_t index) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
+	opendnp3::CommandStatus Operate(const opendnp3::AnalogOutputDouble64& command, uint16_t index, opendnp3::OperateType opType) { return opendnp3::CommandStatus::NOT_SUPPORTED; }
 
 };
 
