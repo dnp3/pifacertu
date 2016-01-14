@@ -3,6 +3,7 @@
 #define __PIFACE_IO_HANDLER_H_
 
 #include <opendnp3/outstation/ICommandHandler.h>
+#include <opendnp3/app/ControlRelayOutputBlock.h>
 #include <asiodnp3/IOutstation.h>
 
 class PifaceIOHandler : public opendnp3::ICommandHandler
@@ -15,6 +16,13 @@ private:
 
 	static bool isSwitchOn(int data, int num);
 
+	struct pulse {
+		uint64_t when;
+		bool state;
+		opendnp3::ControlRelayOutputBlock crob;
+	};
+	struct pulse pulse[8];
+
 public:
 
 	PifaceIOHandler();
@@ -24,6 +32,7 @@ public:
 	virtual void End() override {}
 
 	void ReadMeasurements(asiodnp3::IOutstation* pOutstation);
+	void ProcessPulses();
 
 	opendnp3::CommandStatus Select(const opendnp3::ControlRelayOutputBlock& command, uint16_t index);
 	opendnp3::CommandStatus Operate(const opendnp3::ControlRelayOutputBlock& command, uint16_t index, opendnp3::OperateType opType);

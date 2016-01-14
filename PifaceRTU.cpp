@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
 
 	do {
 		ioHandler.ReadMeasurements(outstation);
+		ioHandler.ProcessPulses();
 		this_thread::sleep_for( chrono::milliseconds(100) );
 	}
 	while(true);
