@@ -20,9 +20,9 @@ int main(int argc, char* argv[])
 
 	const uint32_t FILTERS = levels::NORMAL;
 	DNP3Manager dnp3(1);
-	dnp3.AddLogSubscriber(&ConsoleLogger::Instance());
+	dnp3.AddLogSubscriber(ConsoleLogger::Instance());
 
-	auto channel =  dnp3.AddTCPServer("server", FILTERS, TimeDuration::Seconds(1), TimeDuration::Seconds(1), "0.0.0.0", 20000);
+	auto channel =  dnp3.AddTCPServer("server", FILTERS, ChannelRetry::Default(), "0.0.0.0", 20000);
 
 	OutstationStackConfig stackConfig;
 	stackConfig.dbTemplate = DatabaseTemplate::BinaryOnly(4);
@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
 
 	do {
 		ioHandler.ReadMeasurements(outstation);
+		ioHandler.ProcessPulses();
 		this_thread::sleep_for( chrono::milliseconds(100) );
 	}
 	while(true);

@@ -8,14 +8,66 @@ extern "C" {
 
 #include <iostream>
 #include <chrono>
+#include <sys/time.h>
 
 using namespace opendnp3;
 using namespace asiodnp3;
 
+static uint64_t gettime()
+{
+	struct timeval tv;
+	if(gettimeofday(&tv, NULL) < 0)
+		return 0;
+	return (tv.tv_sec*1000 + tv.tv_usec/1000);
+}
+
+void PifaceIOHandler::ProcessPulses()
+{
+	uint64_t t = gettime();
+	for(int i=0; i<8; i++) {
+		if(pulse[i].crob.count <= 0)
+			continue;
+		if(t >= pulse[i].when) {
+			if(pulse[i].state) {
+				pfio_digital_write(i, 0);
+				pulse[i].state = false;
+				pulse[i].when += pulse[i].crob.offTimeMS;
+				pulse[i].crob.count--;
+			} else {
+				pfio_digital_write(i, 1);
+				pulse[i].state = true;
+				pulse[i].when += pulse[i].crob.onTimeMS;
+			}
+		}
+	}
+}
+
 void PifaceIOHandler::DoOperate(const ControlRelayOutputBlock& command, uint8_t index)
 {
-	uint8_t value = (command.functionCode == ControlCode::LATCH_ON) ? 1 : 0;
-	pfio_digital_write(index, value);
+	switch(command.functionCode)
+	{
+	    case(ControlCode::PULSE_ON):
+		pulse[index].when = gettime();	// now
+		pulse[index].state = 0;
+		pulse[index].crob = command;
+		// -> will activate in main loop
+		break;
+
+	    case(ControlCode::PULSE_OFF):
+		pulse[index].crob.count = 0;
+		pfio_digital_write(index, 0);
+		break;
+
+	    case(ControlCode::LATCH_ON):
+	    case(ControlCode::LATCH_OFF): {
+		uint8_t value = (command.functionCode == ControlCode::LATCH_ON) ? 1 : 0;
+		pfio_digital_write(index, value);
+		break;
+	    }
+
+	    default:
+		break;
+	}
 }
 
 CommandStatus PifaceIOHandler::ValidateCROB(const ControlRelayOutputBlock& command, uint16_t index)
@@ -29,6 +81,8 @@ CommandStatus PifaceIOHandler::ValidateCROB(const ControlRelayOutputBlock& comma
 	{
 	    case(ControlCode::LATCH_ON):
 	    case(ControlCode::LATCH_OFF):
+	    case(ControlCode::PULSE_ON):
+	    case(ControlCode::PULSE_OFF):
 	      return CommandStatus::SUCCESS;
 	    default:
 	      return CommandStatus::NOT_SUPPORTED;
@@ -51,6 +105,8 @@ PifaceIOHandler::PifaceIOHandler()
 		std::cerr << "Unable to initialize piface" << std::endl;
 		exit(result);
 	}
+	for(int i=0; i<8; i++)
+		pulse[i].crob.count=0;
 }
 
 PifaceIOHandler::~PifaceIOHandler()
@@ -75,16 +131,10 @@ CommandStatus PifaceIOHandler::Select(const ControlRelayOutputBlock& command, ui
 	return ValidateCROB(command, index);
 }
 
-CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& command, uint16_t index)
+CommandStatus PifaceIOHandler::Operate(const ControlRelayOutputBlock& command, uint16_t index, OperateType opType)
 {
 	CommandStatus validation = ValidateCROB(command, index);
 	if(validation == CommandStatus::SUCCESS) DoOperate(command, static_cast<char>(index));
 	return validation;
 }
 
-CommandStatus PifaceIOHandler::DirectOperate(const ControlRelayOutputBlock& command, uint16_t index)
-{
-	CommandStatus validation = ValidateCROB(command, index);
-	if(validation == CommandStatus::SUCCESS) DoOperate(command, static_cast<uint8_t>(index));
-	return validation;
-}
