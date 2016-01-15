@@ -5,7 +5,7 @@ Why put dnp3 on the RPi? Because it's fun and a cheap demo of it running on a no
 By default, the RTU listens on port 20000. Master address is 1, outstation address is 1024. You can change these in the source
 or setup some command line arguments. Pull requests happily accepted =).
 
-ControlRelayOutputBlock requests can be sent to indices 0 to 7 with LATCH_ON or LATCH_OFF.
+ControlRelayOutputBlock (CROB) requests can be sent to indices 0 to 7 with LATCH_ON or LATCH_OFF to toggle the state of the output. PULSE_ON and PULSE_OFF can be used in combination with the count and timing parameters to execute step functions. The current resolution is limited to 100ms, but could be updated in the code. 
 
 | Index         | Function        |
 | ------------- |:---------------:|
