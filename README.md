@@ -36,7 +36,7 @@ Building
 
 Piface RTU expects the various opendnp3 libraries to be installed.
 
-Use opendnp3 2.0.x on the RPi or via cross compiler *using the cmake build system*. Make sure that you've defined ASIO_HOME environment variable.
+Use the **opendnp3 2.1.0** release on the RPi or via cross compiler *using the cmake build system*. Make sure that you've defined ASIO_HOME environment variable.
 
 ```
    * cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr
